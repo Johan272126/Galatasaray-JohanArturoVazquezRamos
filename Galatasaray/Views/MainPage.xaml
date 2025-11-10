@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Galatasaray.MainPage"
+    Title="Sensores"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
+
+    <!-- =====================  Recursos  ===================== -->
+    <ContentPage.Resources>
+        <!-- Nueva paleta -->
+        <Color x:Key="CardBg">#1B1C1F</Color>
+        <Color x:Key="Accent">#00B5D8</Color>
+        <!-- Turquesa -->
+        <Color x:Key="Accent2">#22C55E</Color>
+        <!-- Verde -->
+        <Color x:Key="Accent3">#F59E0B</Color>
+        <!-- Ámbar -->
+        <Color x:Key="AccentWarn">#EF4444</Color>
+        <!-- Rojo peligro -->
+        <Color x:Key="TextPrimary">#FFFFFF</Color>
+        <Color x:Key="TextSecondary">#B8B8B8</Color>
+        <Color x:Key="Divider">#2A2A2A</Color>
+
+        <Style TargetType="Frame" x:Key="Card">
+            <Setter Property="Padding" Value="14" />
+            <Setter Property="Margin" Value="0,6" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="HasShadow" Value="True" />
+            <Setter Property="BackgroundColor" Value="{StaticResource CardBg}" />
+            <Setter Property="BorderColor" Value="{StaticResource Divider}" />
+        </Style>
+
+        <Style TargetType="Label" x:Key="CardTitle">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+            <Setter Property="FontAttributes" Value="Bold" />
+        </Style>
+
+        <Style TargetType="Label" x:Key="Metric">
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+        </Style>
+
+        <Style TargetType="Label" x:Key="Caption">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextColor" Value="{StaticResource TextSecondary}" />
+        </Style>
+
+        <!-- Botones -->
+        <Style TargetType="Button" x:Key="PrimaryBtn">
+            <Setter Property="BackgroundColor" Value="{StaticResource Accent}" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="HeightRequest" Value="44" />
+            <Setter Property="LineBreakMode" Value="NoWrap"/>
+        </Style>
+        <Style TargetType="Button" x:Key="DangerBtn">
+            <Setter Property="BackgroundColor" Value="{StaticResource AccentWarn}" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="HeightRequest" Value="44" />
+            <Setter Property="LineBreakMode" Value="NoWrap"/>
+        </Style>
+
+        <!-- “Barras” con Slider deshabilitado -->
+        <Style TargetType="Slider" x:Key="Bar">
+            <Setter Property="IsEnabled" Value="False"/>
+            <Setter Property="InputTransparent" Value="True"/>
+            <Setter Property="ThumbColor" Value="Transparent"/>
+            <Setter Property="HeightRequest" Value="22"/>
+            <Setter Property="MinimumTrackColor" Value="{StaticResource Accent2}"/>
+            <Setter Property="MaximumTrackColor" Value="#333333"/>
+        </Style>
+
+        <Style TargetType="Switch">
+            <Setter Property="OnColor" Value="{StaticResource Accent2}" />
+            <Setter Property="ThumbColor" Value="White" />
+        </Style>
+    </ContentPage.Resources>
+
+    <!-- =====================  Contenido  ===================== -->
+    <ScrollView>
+        <VerticalStackLayout Padding="18,12" Spacing="14">
+
+            <!-- Acciones: ahora con estilos distintos y sin solaparse -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button
+                    Grid.Column="0"
+                    Text="Iniciar todos"
+                    Style="{StaticResource PrimaryBtn}"
+                    Command="{Binding StartAllCommand}" />
+
+                <Button
+                    Grid.Column="1"
+                    Text="Detener todos"
+                    Style="{StaticResource DangerBtn}"
+                    Command="{Binding StopAllCommand}" />
+            </Grid>
+
+            <!-- =============== Acelerómetro (sin iconos) =============== -->
+            <Frame Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Label Text="Acelerómetro" Style="{StaticResource CardTitle}" />
+                        <HorizontalStackLayout Spacing="6" Grid.Column="1">
+                            <Label Text="Activo" VerticalOptions="Center" TextColor="{StaticResource TextSecondary}" />
+                            <Switch IsEnabled="{Binding AccelSupported}" IsToggled="{Binding AccelOn}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding AccelX, StringFormat='X {0:F2} g'}" Style="{StaticResource Metric}" />
+                            <Slider Style="{StaticResource Bar}" Minimum="-2" Maximum="2" Value="{Binding AccelX}" />
+                            <Label Text="−2g … +2g" Style="{StaticResource Caption}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="{Binding AccelY, StringFormat='Y {0:F2} g'}" Style="{StaticResource Metric}" />
+                            <Slider Style="{StaticResource Bar}" Minimum="-2" Maximum="2" Value="{Binding AccelY}" />
+                            <Label Text="−2g … +2g" Style="{StaticResource Caption}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="{Binding AccelZ, StringFormat='Z {0:F2} g'}" Style="{StaticResource Metric}" />
+                            <Slider Style="{StaticResource Bar}" Minimum="-2" Maximum="2" Value="{Binding AccelZ}" />
+                            <Label Text="−2g … +2g" Style="{StaticResource Caption}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- =============== Brújula (sin iconos) =============== -->
+            <Frame Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Label Text="Brújula" Style="{StaticResource CardTitle}" />
+                        <HorizontalStackLayout Spacing="6" Grid.Column="1">
+                            <Label Text="Activo" VerticalOptions="Center" TextColor="{StaticResource TextSecondary}" />
+                            <Switch IsEnabled="{Binding CompassSupported}" IsToggled="{Binding CompassOn}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <Label Text="{Binding CompassHeading, StringFormat='{0:F0}°'}" Style="{StaticResource Metric}" />
+
+                    <!-- Rosa de vientos simple con aguja -->
+                    <Grid HeightRequest="140" WidthRequest="140" HorizontalOptions="Center" VerticalOptions="Center">
+                        <!-- Círculo -->
+                        <Frame CornerRadius="70" WidthRequest="140" HeightRequest="140"
+                               HasShadow="False"
+                               BackgroundColor="Transparent"
+                               BorderColor="{StaticResource Divider}"/>
+                        <!-- Cardinales -->
+                        <Label Text="N" HorizontalOptions="Center" VerticalOptions="Start" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Text="S" HorizontalOptions="Center" VerticalOptions="End" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Text="O" HorizontalOptions="Start" VerticalOptions="Center" Margin="6,0" TextColor="{StaticResource TextSecondary}"/>
+                        <Label Text="E" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,6,0" TextColor="{StaticResource TextSecondary}"/>
+                        <!-- Aguja -->
+                        <BoxView Color="{StaticResource Accent3}"
+                                 WidthRequest="3" HeightRequest="55"
+                                 HorizontalOptions="Center" VerticalOptions="Center"
+                                 AnchorX="0.5" AnchorY="1.0"
+                                 Rotation="{Binding CompassHeading}" />
+                        <!-- Centro -->
+                        <Frame CornerRadius="8" WidthRequest="16" HeightRequest="16"
+                               BackgroundColor="{StaticResource Accent}" HasShadow="False"
+                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- =============== Barómetro (sin iconos) =============== -->
+            <Frame Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Label Text="Barómetro" Style="{StaticResource CardTitle}" />
+                        <HorizontalStackLayout Spacing="6" Grid.Column="1">
+                            <Label Text="Activo" VerticalOptions="Center" TextColor="{StaticResource TextSecondary}" />
+                            <Switch IsEnabled="{Binding BaroSupported}" IsToggled="{Binding BaroOn}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <Label Text="{Binding BaroHpa, StringFormat='{0:F1} hPa'}" Style="{StaticResource Metric}" />
+                    <Slider Style="{StaticResource Bar}" Minimum="900" Maximum="1100" Value="{Binding BaroHpa}" />
+                    <Label Text="900 … 1100 hPa" Style="{StaticResource Caption}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- =============== Giroscopio (sin iconos) =============== -->
+            <Frame Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <Label Text="Giroscopio" Style="{StaticResource CardTitle}" />
+                        <HorizontalStackLayout Spacing="6" Grid.Column="1">
+                            <Label Text="Activo" VerticalOptions="Center" TextColor="{StaticResource TextSecondary}" />
+                            <Switch IsEnabled="{Binding GyroSupported}" IsToggled="{Binding GyroOn}" />
+                        </HorizontalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding GyroX, StringFormat='X {0:F2} rad/s'}" Style="{StaticResource Metric}" />
+                            <Slider Style="{StaticResource Bar}" Minimum="-10" Maximum="10" Value="{Binding GyroX}" />
+                            <Label Text="−10 … +10 rad/s" Style="{StaticResource Caption}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="{Binding GyroY, StringFormat='Y {0:F2} rad/s'}" Style="{StaticResource Metric}" />
+                            <Slider Style="{StaticResource Bar}" Minimum="-10" Maximum="10" Value="{Binding GyroY}" />
+                            <Label Text="−10 … +10 rad/s" Style="{StaticResource Caption}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="2">
+                            <Label Text="{Binding GyroZ, StringFormat='Z {0:F2} rad/s'}" Style="{StaticResource Metric}" />
+                            <Slider Style="{StaticResource Bar}" Minimum="-10" Maximum="10" Value="{Binding GyroZ}" />
+                            <Label Text="−10 … +10 rad/s" Style="{StaticResource Caption}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Estado inferior -->
+            <Frame Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Estado" Style="{StaticResource CardTitle}" />
+                    <Label FontSize="12" Text="{Binding StatusText}" TextColor="{StaticResource TextSecondary}" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
